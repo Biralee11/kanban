@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Exception;
 use App\Models\{Project, Task};
 use Illuminate\Support\Facades\DB;
+use Mockery\Expectation;
 
 class DashboardController extends Controller
 {
@@ -98,8 +99,14 @@ class DashboardController extends Controller
         }
     }
 
-    public function projectDetail()
+    public function projectDetail(Request $request)
     {
-        
+        try {
+            $projects = Project::where('id', '1')->first();
+            return view('project-details', ['projects'=>$projects]);
+
+        } catch (Expectation $exception) {
+            return back()->with('error', 'something is wrong'); 
+        }
     }
 }

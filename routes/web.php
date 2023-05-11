@@ -27,4 +27,6 @@ Route::get('dashboard', [DashboardController::class, 'index'])->name('home');
 Route::get('project', [DashboardController::class, 'project'])->name('project');
 Route::post('project', [DashboardController::class, 'projectCreate']);
 Route::get('project-detail', [DashboardController::class, 'projectDetail'])->name('projectDetail');
+
+
 Route::get('delete_project', [DashboardController::class, 'deleteProject'])->name('delete_project');
