@@ -35,6 +35,7 @@
                                         </div>
                                         <div class="nk-block-head-content">
                                             <ul class="d-flex">
+                                                @if (auth()->user()->role_id == 4)
                                                 <li>
                                                     <a href="#" class="btn btn-md d-md-none btn-primary" data-bs-toggle="modal" data-bs-target="#createTicketModal">
                                                         <em class="icon ni ni-plus"></em><span>Create</span>
@@ -45,6 +46,7 @@
                                                         <em class="icon ni ni-plus"></em><span>Create Project</span>
                                                     </a>
                                                 </li>
+                                                @endif
                                             </ul>
                                         </div>
                                     </div>
@@ -79,7 +81,7 @@
                                                                 <a href="delete_project?id={{$project->id}}" class="btn btn-sm btn-lighter"> <em class="icon ni ni-delete"></em> </a>
                                                             </div>
                                                             <div class="gap-col">
-                                                                <a href="invoice-preview.html" class="btn btn-sm btn-lighter"> <em class="icon ni ni-eye"></em> </a>
+                                                                <a href="project-detail?id={{$project->id}}" class="btn btn-sm btn-lighter"> <em class="icon ni ni-eye"></em> </a>
                                                             </div>
                                                         </div>
                                                     </td>

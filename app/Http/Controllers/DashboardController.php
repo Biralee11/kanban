@@ -4,15 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Exception;
-use App\Models\{Project, Task};
+use App\Models\{Project, Task, User};
 use Illuminate\Support\Facades\DB;
 use Mockery\Expectation;
+use Symfony\Component\Console\Input\Input;
 
 class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        return view('dashboard');
+        $i =1;
+        $allUser = User::get();
+        return view('dashboard', ['users' => $allUser, 'i' => $i]);
     }
     public function project(Request $request)
     {
@@ -23,14 +26,13 @@ class DashboardController extends Controller
 
     public function projectCreate(Request $request)
     {
-        try {
-           $request->validate([
+        $request->validate([
             'project_name' => 'required',
             'project_slug' => 'required',
             'description' => 'required',
 
            ]);
-
+        try {
            $project_id =  rand(00000, 990999);
            $creat_project = new Project();
            $creat_project->project_id = $project_id;
@@ -67,25 +69,20 @@ class DashboardController extends Controller
     public function taskCreate(Request $request)
     {
         try {
-           $request->validate([
-            'project_name' => 'required',
-            'project_slug' => 'required',
-            'description' => 'required',
-
-           ]);
-
            $task_id =  rand(00000, 990999);
            $creat_task = new Task();
            $creat_task->task_id = $task_id;
-           $creat_task->task_name = $request->task_name;
-           $creat_task->task_slug = $request->task_slug;
+           $creat_task->name = $request->task_name;
+           $creat_task->user_id = $request->user_id;
+           $creat_task->status = $request->status;
+           $creat_task->priority = $request->priority;
            $creat_task->description = $request->description;
+           $creat_task->project_id = $request->project_id;
            $creat_task->save();
-
-           return redirect()->route('task')->with('success', 'Task successfully uploaded !');
+           return redirect()->back()->with('success', 'Task successfully uploaded !');
 
         } catch (Exception $exception) {
-            return back()->with('error', 'something is wrong');
+            return back()->with('error', 'something is wrong'.$exception);
         }
     }
 
@@ -102,8 +99,10 @@ class DashboardController extends Controller
     public function projectDetail(Request $request)
     {
         try {
-            $projects = Project::where('id', '1')->first();
-            return view('project-details', ['projects'=>$projects]);
+            
+            $projects = Project::where('id', $request->id)->first();
+            $tasks = Task::where('project_id', $projects->project_id)->get();
+            return view('project-details', ['projects'=>$projects, 'tasks' => $tasks]);
 
         } catch (Expectation $exception) {
             return back()->with('error', 'something is wrong'); 

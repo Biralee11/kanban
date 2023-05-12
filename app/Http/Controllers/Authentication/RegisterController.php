@@ -24,19 +24,28 @@ class RegisterController extends Controller
             'name' => 'required',
             // 'role_id' => 'required'
         ]);
-        // dd($request->input());
+        
+        if($request->role == '') {
+            $role = 4;
+        }else{
+            $role = $request->role;
+        }
 
         try {
+
             $registration = new User();
             $registration->email = $request->email;
             $registration->password = Hash::make($request->password);
             $registration->name = $request->name;
+            $registration->role_id = $role;
             $registration->save();
 
-            return view('auths.auth-login')->with('success', 'Registration successful you can login now');
+            return redirect()->back()->with('success', 'Registration successful');
 
         } catch (Exception $exception) {
             return redirect()->back()->with('error', 'Something happened please try again later');
         }
     }
+
+    
 }
