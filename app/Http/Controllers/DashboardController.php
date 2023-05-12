@@ -96,6 +96,16 @@ class DashboardController extends Controller
         }
     }
 
+    public function deleteUser(Request $request)
+    {
+        try {
+            User::where('id', $request->id)->delete();
+            return back()->with('success', 'User deleted successfully');
+        } catch (Exception $exception) {
+            return back()->with('error', 'something is wrong');
+        }
+    }
+
     public function projectDetail(Request $request)
     {
         try {

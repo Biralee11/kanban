@@ -33,3 +33,4 @@ Route::post('task-add', [DashboardController::class, 'taskCreate'])->name('taskc
 
 
 Route::get('delete_project', [DashboardController::class, 'deleteProject'])->name('delete_project')->middleware('auth');
+Route::get('delete_user', [DashboardController::class, 'deleteUser'])->name('delete_user')->middleware('auth');
