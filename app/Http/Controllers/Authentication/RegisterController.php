@@ -22,22 +22,14 @@ class RegisterController extends Controller
             'email' => 'required',
             'password' => 'required',
             'name' => 'required',
-            // 'role_id' => 'required'
         ]);
         
-        if($request->role == '') {
-            $role = 4;
-        }else{
-            $role = $request->role;
-        }
-
         try {
 
             $registration = new User();
             $registration->email = $request->email;
             $registration->password = Hash::make($request->password);
             $registration->name = $request->name;
-            $registration->role_id = $role;
             $registration->save();
 
             return redirect()->back()->with('success', 'Registration successful');

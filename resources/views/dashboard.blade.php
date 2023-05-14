@@ -35,18 +35,19 @@
                                         <div class="nk-block-head-content">
                                             <ul class="d-flex">
                                                 @if (auth()->user()->role_id == 4)
-                                                <li>
-                                                    <a href="#" class="btn btn-md d-md-none btn-primary"
-                                                        data-bs-toggle="modal" data-bs-target="#createTicketModal">
-                                                        <em class="icon ni ni-plus"></em><span>Create</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" class="btn btn-primary d-none d-md-inline-flex"
-                                                        data-bs-toggle="modal" data-bs-target="#createTicketModal">
-                                                        <em class="icon ni ni-plus"></em><span>Add User</span>
-                                                    </a>
-                                                </li>
+                                                    <li>
+                                                        <a href="#" class="btn btn-md d-md-none btn-primary"
+                                                            data-bs-toggle="modal" data-bs-target="#createTicketModal">
+                                                            <em class="icon ni ni-plus"></em><span>Assign</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#"
+                                                            class="btn btn-primary d-none d-md-inline-flex"
+                                                            data-bs-toggle="modal" data-bs-target="#createTicketModal">
+                                                            <em class="icon ni ni-plus"></em><span>Assign User</span>
+                                                        </a>
+                                                    </li>
                                                 @endif
                                             </ul>
                                         </div>
@@ -76,9 +77,11 @@
                                                             <td class="tb-col tb-col-check"> <span> {{ $i++ }}
                                                                 </span> </td>
                                                             <td class="tb-col tb-col-xl">
-                                                                <span>{{ $user->name }}</span></td>
+                                                                <span>{{ $user->name }}</span>
+                                                            </td>
                                                             <td class="tb-col tb-col-xl">
-                                                                <span>{{ $user->email }}</span></td>
+                                                                <span>{{ $user->email }}</span>
+                                                            </td>
                                                             <td class="tb-col tb-col-xl"><span>
                                                                     @if ($user->role_id == 1)
                                                                         Developer
@@ -89,7 +92,8 @@
                                                                     @endif
                                                                 </span></td>
                                                             <td class="tb-col tb-col-xl">
-                                                                <span>{{ $user->created_at }}</span></td>
+                                                                <span>{{ $user->created_at }}</span>
+                                                            </td>
                                                             <td class="tb-col tb-col-end">
                                                                 <div class="d-flex justify-content-end gap g-2">
                                                                     <div class="gap-col">
@@ -123,32 +127,24 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="createTicketModalLabel">Create a User</h4>
+                <h4 class="modal-title" id="createTicketModalLabel">Assign Role</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('register') }}" method="POST">
+                <form action="{{ route('assign-role') }}" method="POST">
                     @csrf
                     <div class="row g-3">
                         <div class="col-lg-12">
-                            <div class="form-group"><label class="form-label">User Name</label>
+                            <div class="form-group"><label class="form-label">Users</label>
                                 <div class="form-control-wrap">
-                                    <input type="text" class="form-control" name="name" placeholder="Name">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="form-group"><label class="form-label">Email</label>
-                                <div class="form-control-wrap">
-                                    <input type="email" class="form-control" name="email" placeholder="Email">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="form-group"><label class="form-label">Password</label>
-                                <div class="form-control-wrap">
-                                    <input type="password" class="form-control" name="password"
-                                        placeholder="*********">
+                                    <select class="js-select" name="id" data-sort="false">
+                                        <option value="">Select a user</option>
+                                        @foreach ($users as $user)
+                                            @if ($user->role_id != 4)
+                                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -166,7 +162,7 @@
                         </div>
                         <div class="col-lg-12">
                             <div class="d-flex gap g-2">
-                                <div class="gap-col"><button class="btn btn-primary" type="submit">Add User</button>
+                                <div class="gap-col"><button class="btn btn-primary" type="submit">Assign</button>
                                 </div>
                                 <div class="gap-col"><button type="button" class="btn border-0"
                                         data-bs-dismiss="modal">Discard</button></div>

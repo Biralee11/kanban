@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Exception;
-use App\Models\{Project, Task, User};
+use App\Models\{Project, Task, User, Comment};
 use Illuminate\Support\Facades\DB;
 use Mockery\Expectation;
 use Symfony\Component\Console\Input\Input;
@@ -17,6 +17,18 @@ class DashboardController extends Controller
         $allUser = User::get();
         return view('dashboard', ['users' => $allUser, 'i' => $i]);
     }
+
+
+    public function assignRole(Request $request)
+    {
+        $assign_role = User::find($request->id);
+        $assign_role->role_id = $request->role;
+        $assign_role->save();
+
+        return redirect()->back()->with('success', 'Role successfully assigned');
+
+    }
+
     public function project(Request $request)
     {
         $i =1;
@@ -86,6 +98,15 @@ class DashboardController extends Controller
         }
     }
 
+    public function changeTaskStatus(Request $request)
+    {
+        $task_id = $request->id;
+        $Update = Task::find($task_id);
+        $Update->status = $request->status;
+        $Update->save();
+        return redirect()->back()->with('success', 'Updat task successful');
+    }
+
     public function deleteTask(Request $request)
     {
         try {
@@ -109,13 +130,45 @@ class DashboardController extends Controller
     public function projectDetail(Request $request)
     {
         try {
-            
+            $users =  User::where('role_id', '!=', '4')->get();
             $projects = Project::where('id', $request->id)->first();
             $tasks = Task::where('project_id', $projects->project_id)->get();
-            return view('project-details', ['projects'=>$projects, 'tasks' => $tasks]);
+            $comment = Comment::where('project_id', $projects->project_id)->get();
+            return view('project-details', ['projects'=>$projects, 'tasks' => $tasks, 'users' => $users, 'comments' => $comment]);
 
         } catch (Expectation $exception) {
             return back()->with('error', 'something is wrong'); 
         }
+    }
+
+    public function addComment(Request $request)
+    {
+        $addComment = new Comment();
+        $addComment->task_id = $request->task_id;
+        $addComment->user_id = $request->user_id;
+        $addComment->project_id = $request->project_id;
+        $addComment->message = $request->message;
+        $addComment->save();
+
+        return redirect()->back()->with('success', 'Comment successfully added');
+    }
+
+    public function deleteComment(Request $request)
+    {
+        try {
+            Comment::where('id', $request->id)->delete();
+            return back()->with('success', 'Comment deleted successfully');
+        } catch (Exception $exception) {
+            return back()->with('error', 'something is wrong');
+        }
+    }
+
+    public function editComment(Request $request)
+    {
+        $id = $request->id;
+        $Update = Comment::find($id);
+        $Update->message = $request->message;
+        $Update->save();
+        return redirect()->back()->with('success', 'Comment successfully edited');
     }
 }
